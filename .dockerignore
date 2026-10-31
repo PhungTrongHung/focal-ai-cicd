@@ -1,0 +1,14 @@
+.git
+.github
+.vscode
+.venv
+__pycache__
+*.pyc
+*.log
+data
+datasets
+weights
+checkpoints
+*.pt
+*.pth
+*.ckpt
