@@ -2,9 +2,11 @@ name: FOCAL AI CI-CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -29,21 +31,25 @@ jobs:
       - name: Check Python source syntax
         run: python -m compileall -q src
 
+      - name: Check Docker installation
+        run: docker --version
+
       - name: Build FOCAL Docker image
-        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest .
+        run: docker build --tag hung5705/focal-ai:latest .
+
+      - name: Check Docker images
+        run: docker image ls
 
       - name: Smoke test FOCAL container
-        run: |
-          docker run --rm \
-            ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest
+        run: docker run --rm hung5705/focal-ai:latest
 
       - name: Login to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/login-action@v4
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: hung5705
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push image to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest
+        run: docker push hung5705/focal-ai:latest
