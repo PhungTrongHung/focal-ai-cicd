@@ -30,9 +30,7 @@ jobs:
         run: python -m compileall -q src
 
       - name: Build FOCAL Docker image
-        run: |
-          docker build \
-            -t ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest .
+        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest .
 
       - name: Smoke test FOCAL container
         run: |
@@ -48,6 +46,4 @@ jobs:
 
       - name: Push image to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          docker push \
-            ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest
+        run: docker push ${{ vars.DOCKERHUB_USERNAME }}/focal-ai:latest
